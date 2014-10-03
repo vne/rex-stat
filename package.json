@@ -10,7 +10,10 @@
     "type": "git",
     "url": "https://github.com/vne/rex-stat"
   },
-  "author": "Vladimir Neverov <sanguini@gmail.com>",
+  "author": {
+    "name": "Vladimir Neverov",
+    "email": "sanguini@gmail.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/vne/rex-stat/issues"
@@ -19,5 +22,12 @@
     "object-path": "~0.6.0",
     "pyfmt": "~0.0.6",
     "xml2js": "~0.4.4"
-  }
+  },
+  "readme": "General REX statistics collector\n================================\n\nWritten by Vladimir Neverov <sanguini@gmail.com> in 2014.\n\nNobody needs this module except me :)\n\n\n",
+  "readmeFilename": "README.md",
+  "gitHead": "7c62b1f97bfdf7da7158c46e96cf4b2088f41a76",
+  "homepage": "https://github.com/vne/rex-stat",
+  "_id": "rex-stat@0.0.1",
+  "_shasum": "3fd42706b6f92b919630b0aa62623e11f611a703",
+  "_from": "rex-stat@"
 }
