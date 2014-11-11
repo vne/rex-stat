@@ -110,7 +110,11 @@ REXStat.prototype.toString = function() {
 		}
 
 	s += fleaf("Totals", this.stat, 8);
-	s += "    of them " + (this.stat.photos.exist || 0) + " have photos, " + (this.stat.photos.zero || 0) + " do not. " + (this.stat.photos.total || 0) + " photos processed.\n";
+	if (this.stat.photos) {
+		s += "    of them " + (this.stat.photos.exist || 0) + " have photos, " + (this.stat.photos.zero || 0) + " do not. " + (this.stat.photos.total || 0) + " photos processed.\n";
+	} else {
+		s += "    no photos found.\n";
+	}
 	s += "\n";
 
 	s += "By operation:\n================================\n";
