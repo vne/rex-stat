@@ -17,6 +17,28 @@ function REXStat(task, id, settings) {
 		by_etype: {},
 		by_otype: {},
 	};
+	this.advstat = [];
+}
+
+REXStat.prototype.serialize = function() {
+	return {
+		stat: this.stat,
+		start_tm: this.start_tm,
+		task: this.task,
+		id: this.id,
+		advstat: this.advstat,
+		settings: this.settings
+	};
+}
+
+REXStat.prototype.unserialize = function(s) {
+	console.log('unserialize', s);
+	this.stat = s.stat;
+	this.start_tm = s.start_tm;
+	this.task = s.task;
+	this.id = s.id;
+	this.advstat = s.advstat;
+	this.settings = s.settings;
 }
 
 REXStat.prototype.ok = function(order) {
@@ -39,20 +61,36 @@ REXStat.prototype.processOrder = function(order, success) {
 			self.addOrder(res.order, success);
 		})
 	} else if (order.constructor === Object) {
-		self.addOrder(order, success);
+		if (order.type && order.type.constructor === Array) {
+			self.addOrder(order, success);
+		} else {
+			self.addOrder(order, success, true);
+		}
 	} else {
 		return console.log("REXStat: order is neither a string nor an object");
 	}
 }
 
-REXStat.prototype.addOrder = function(order, success) {
+REXStat.prototype.addOrder = function(order, success, legacy) {
 	var oid = objpath.coalesce(order, ["$.id", "meta.0.extid.0", "meta.0.extid.0._"]),
 		opr = op(order, "type.0"),
 		etype = op(order, "estate.0.type.0"),
 		otype = op(order, "estate.0.object.0"),
 		photos = op(order, "meta.0.attachments.0.attachment"),
 		photocnt = photos ? photos.length : 0,
+		suffix = success ? ".ok" : ".fail",
+		advstat = objpath.get(order, "meta.0.advstat.0");
+
+	if (legacy) {
+		oid = objpath.coalesce(order, ["$.id", "meta.extid.0", "meta.extid._"]);
+		opr = op(order, "type");
+		etype = op(order, "estate.type");
+		otype = op(order, "estate.object");
+		photos = op(order, "meta.attachments.attachment");
+		photocnt = photos ? photos.length : 0;
 		suffix = success ? ".ok" : ".fail";
+		advstat = objpath.get(order, "meta.advstat");
+	}
 
 	this.stat.total += 1;
 
@@ -72,6 +110,19 @@ REXStat.prototype.addOrder = function(order, success) {
 	this.inc("photos.total", photocnt);
 	if (!photocnt) { this.inc("photos.zero"); }
 	if (photocnt) { this.inc("photos.exist"); }
+
+	// only alter statistics if an object was successfully converted
+	if (advstat && success) {
+		this.advstat.push(advstat);
+	}
+}
+
+REXStat.prototype.length = function() {
+	return this.advstat.length;
+}
+
+REXStat.prototype.adv_stat = function() {
+	return this.advstat;
 }
 
 REXStat.prototype.inc = function(path, inc, suffix) {
@@ -136,6 +187,12 @@ REXStat.prototype.toString = function() {
 		s += "  " + fleaf(i, this.stat.by_otype[i], l1w);
 		s += fsub("  ", this.stat.by_otype[i].by_etype);
 		s += fsub("  ", this.stat.by_otype[i].by_op);
+	}
+
+	if (this.advstat.length) {
+		s += "\n" + this.advstat.length + " records in payment statistics\n";
+	} else {
+		s += "\nNo payment statistics\n";
 	}
 
 	return s;
