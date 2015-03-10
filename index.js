@@ -71,7 +71,7 @@ REXStat.prototype.processOrder = function(order, success) {
 }
 
 REXStat.prototype.addOrder = function(order, success, legacy) {
-	var oid = objpath.coalesce(order, ["$.id", "meta.0.extid.0", "meta.0.extid.0._"]),
+	var oid = objpath.coalesce(order, ["meta.0.extid.0", "meta.0.extid.0._", "$.id"]),
 		opr = op(order, "type.0"),
 		etype = op(order, "estate.0.type.0"),
 		otype = op(order, "estate.0.object.0"),
