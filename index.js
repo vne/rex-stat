@@ -32,7 +32,6 @@ REXStat.prototype.serialize = function() {
 }
 
 REXStat.prototype.unserialize = function(s) {
-	console.log('unserialize', s);
 	this.stat = s.stat;
 	this.start_tm = s.start_tm;
 	this.task = s.task;
