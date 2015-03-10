@@ -81,7 +81,7 @@ REXStat.prototype.addOrder = function(order, success, legacy) {
 		advstat = objpath.get(order, "meta.0.advstat.0");
 
 	if (legacy) {
-		oid = objpath.coalesce(order, ["$.id", "meta.extid.0", "meta.extid._"]);
+		oid = objpath.coalesce(order, ["meta.extid.0", "meta.extid._", "$.id"]);
 		opr = op(order, "type");
 		etype = op(order, "estate.type");
 		otype = op(order, "estate.object");
