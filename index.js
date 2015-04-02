@@ -32,12 +32,12 @@ REXStat.prototype.serialize = function() {
 }
 
 REXStat.prototype.unserialize = function(s) {
-	this.stat = s.stat;
-	this.start_tm = s.start_tm;
-	this.task = s.task;
-	this.id = s.id;
-	this.advstat = s.advstat;
-	this.settings = s.settings;
+	if (this.stat) { this.stat = s.stat; }
+	if (this.start_tm) { this.start_tm = s.start_tm; }
+	if (this.task) { this.task = s.task; }
+	if (this.id) { this.id = s.id; }
+	if (s.advstat) { this.advstat = s.advstat; }
+	if (s.settings) { this.settings = s.settings; }
 }
 
 REXStat.prototype.ok = function(order) {
